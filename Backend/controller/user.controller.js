@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import { User } from "../Models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-
+import {BlacklistToken } from "../Models/blacklistToken.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -25,15 +25,18 @@ const registerUser = asyncHandler(async (req, res) => {
     let firstname = fullname.firstname;
     let lastname = fullname.lastname;
     
+    if(firstname.length < 3) {  
+      throw new ApiError(400 , "First name must be 3 letter or long")
+    }
     if (firstname == "" || email == "" || password == "") {
-      return new ApiError(400, "All fields are Required");
+      throw new ApiError(400, "All fields are Required");
     }
     let ad = 0;
     for (let i = 0; i < email.length; ++i) {
       if (email[i] == "@") ad++;
     }
     if (ad != 1) {
-      return new ApiError(400, "type Correct email");
+      throw new ApiError(400, "type Correct email");
     }
 
     // To check single variable
@@ -43,7 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
     // console.log("Existed User : ", exixtedUser);
     if (exixtedUser) {
-      return new ApiError(409, "User with email and Already Exist");
+      return res.status(404).json(new ApiError(404, null, "User Already Exist"));
     }
     // const hashPassword = await User.hashPassword(password)
     // creating user object
@@ -76,4 +79,80 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+  // rewq.body take data from user - > (username, email , passwred)
+  // validate input fields are not empty and in correct formate
+  // find user if it exist or not - > if not send to register page
+  // encrypt pass & check password is correct or not
+  // generate access and refresh token and send to user by secure cookies
+  // if correct authenticate user tu accesss things
+  // return response
+
+  const {email , password} = req.body;
+  if(email == "" || password == "") {
+    throw new ApiError(400 , "All fields are required")
+  }
+  let ad = 0;
+  for (let i = 0; i < email.length; ++i) {
+    if (email[i] == "@") ad++;
+  }
+  if (ad != 1) {
+    throw new ApiError(400, "type Correct email");
+  }
+  const user =  await User.findOne({email}).select("+password");
+  if(!user) {
+    throw new ApiError(404 , "User not found")
+  }
+
+  const isMatch = await user.comparePassword(password);
+  if(!isMatch) {
+    throw new ApiError(400 , "Invalid Password")
+  }
+  const token = user.generateAuthToken();
+  return res
+  .status(200)
+  .cookie("token" , token )
+  .json(
+    new ApiResponse(
+      200 ,
+      {token , user}, 
+      "User Login Successfully"))
+
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200,
+        req.user,
+        "Current User Featched Successfully")
+    );
+});
+
+const loggedOutUser = asyncHandler(async (req, res) => {
+
+      const token = req.cookies?.token || req.headers?.authorization?.split(' ')[1];
+      
+      if(!token) {
+          throw new ApiError(401, "Unauthorized Request")
+      }
+  
+      // Add to blacklist
+      await BlacklistToken.create({token}); 
+  
+      // Clear cookie with same options used when setting it
+      res.clearCookie("token");
+  
+      return res
+          .status(200)
+          .json(new ApiResponse(200, null, "User Logout Successfully"));
+});
+
+
+export { 
+  registerUser,
+  loginUser,
+  getCurrentUser,
+  loggedOutUser
+};

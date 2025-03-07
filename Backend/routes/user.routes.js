@@ -1,9 +1,15 @@
 import { Router } from "express";
 import { body } from "express-validator";
 const router = Router();
-import { registerUser } from "../controller/user.controller.js";
+import { authUser } from "../middleware/auth.middelware.js";
+import { loginUser, registerUser , getCurrentUser , loggedOutUser} from "../controller/user.controller.js";
 
 router.route("/register").post(registerUser);
+router.route("/login").post(loginUser);
+router.route("/current-user").get(authUser ,getCurrentUser);
+router.route("/logout").get(authUser ,loggedOutUser);
+
+
 
 // TODO: Erros not solved for bottem this
 // router.post('/register', [

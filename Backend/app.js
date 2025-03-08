@@ -21,12 +21,14 @@ app.use(cookieParser());
 
 
 import userRouter from "./routes/user.routes.js"
+import captainRouter from "./routes/captain.routes.js"
 
 app.get("/", (req, res) => {
   res.send("hii");
 });
 
-app.use("/api/v1/users" , userRouter)
+app.use("/api/v1/users" , userRouter);
+app.use("/api/v1/captains" , captainRouter);
 
 
 export default app;

@@ -4,7 +4,7 @@ import { Link, Route } from 'react-router-dom'
 function Home() {
   return (
     <>
-        <div className='bg-[url(https://images.unsplash.com/photo-1586805372042-327a923a697a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHRyYWZmaWN8ZW58MHx8MHx8fDA%3D)] h-screen w-full pt-8  flex justify-between flex-col bg-red-400 '>
+        <div className='bg-[url(https://images.unsplash.com/photo-1586805372042-327a923a697a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHRyYWZmaWN8ZW58MHx8MHx8fDA%3D)] h-screen w-full pt-8  flex justify-between flex-col  '>
             <img className='w-16 ml-8' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
 
             <img src="" alt="" />

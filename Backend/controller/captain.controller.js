@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { validationResult } from "express-validator";
 import {BlacklistToken} from "../Models/blacklistToken.model.js";
 const registerCaptain = asyncHandler(async (req, res, next) => {
+ 
   const validationErrors = validationResult(req);
   if (!validationErrors.isEmpty()) {
     throw new ApiError(400, validationErrors.array());
@@ -31,6 +32,7 @@ const registerCaptain = asyncHandler(async (req, res, next) => {
   if (isCaptain) {
     throw new ApiError(400, "Captain already registered");
   }
+
   const captain = await Captain.create({
     fullname: {
       firstname,
@@ -76,11 +78,11 @@ const loginCaptain = asyncHandler(async (req, res, next) => {
   }
   const token = captain.generateAuthToken();
   return res
-  .status(200)
+  .status(201)
   .cookie("token", token)
   .json(
     new ApiResponse(
-      200, 
+      201, 
       "Captain logged in successfully", 
       { 
         captain, 
@@ -92,8 +94,8 @@ const loginCaptain = asyncHandler(async (req, res, next) => {
 const currentCaptain = asyncHandler(async (req, res, next) => {
   const captain = req.captain;
   return res
-    .status(200)
-    .json(new ApiResponse(200, "Captain found", captain));
+    .status(201)
+    .json(new ApiResponse(201, "Captain found", captain));
 });
 
 const logoutCaptain = asyncHandler(async (req, res, next) => {
@@ -105,9 +107,9 @@ const logoutCaptain = asyncHandler(async (req, res, next) => {
 
   const captain = req.captain;
   return res
-    .status(200)
+    .status(201)
     .clearCookie("token")
-    .json(new ApiResponse(200, "Captain logged out successfully", captain));
+    .json(new ApiResponse(201, "Captain logged out successfully", captain));
 }
 );
 

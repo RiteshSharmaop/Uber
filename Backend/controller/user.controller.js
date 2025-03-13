@@ -58,7 +58,8 @@ const registerUser = asyncHandler(async (req, res) => {
       email,
       password,
     });
-    // return res.status(200).json(new ApiResponse(200 , "DONE............"))
+
+    // return res.status(201).json(new ApiResponse(201 , "DONE............"))
 
     const createdUser = await User.findById(user._id);
     if (!createdUser) {
@@ -68,12 +69,13 @@ const registerUser = asyncHandler(async (req, res) => {
       );
     }
 
-    const token = user.generateAuthToken();
+    const token = await user.generateAuthToken();
 
     // return res.status(201).json({createdUser})
+    console.log("Created User : ", createdUser, token);
     return res
       .status(201)
-      .json(new ApiResponse(200, {createdUser , token}, "User Register Successfully"));
+      .json(new ApiResponse(201, {user: createdUser , token}, "User Register Successfully"));
   } catch (error) {
     return new ApiError(401, "Failed to Login User");
   }
@@ -109,12 +111,13 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400 , "Invalid Password")
   }
   const token = user.generateAuthToken();
+  console.log("Token : ", token);
+  res.cookie("token" , token )
   return res
-  .status(200)
-  .cookie("token" , token )
+  .status(201)
   .json(
     new ApiResponse(
-      200 ,
+      201,
       {token , user}, 
       "User Login Successfully"))
 
@@ -122,9 +125,9 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
-    .status(200)
+    .status(201)
     .json(
-      new ApiResponse(200,
+      new ApiResponse(201,
         req.user,
         "Current User Featched Successfully")
     );
@@ -145,8 +148,8 @@ const loggedOutUser = asyncHandler(async (req, res) => {
       res.clearCookie("token");
   
       return res
-          .status(200)
-          .json(new ApiResponse(200, null, "User Logout Successfully"));
+          .status(201)
+          .json(new ApiResponse(201, null, "User Logout Successfully"));
 });
 
 

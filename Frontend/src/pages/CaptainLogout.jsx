@@ -1,23 +1,26 @@
 import React from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
-function UserLogout() {
+function CaptainLogout() {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
-    axios.get(`${import.meta.env.VITE_BASE_URL}/users/logout`, {
+    axios.get(`${import.meta.env.VITE_BASE_URL}/captains/logout` ,
+      {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }).then((response) => {
         if(response.status === 201){
             localStorage.removeItem('token');
-            navigate('/login')
+            navigate('/captain-login')
         }
     })
   return (
-    <div>UserLogout</div>
+    <div>
+      Captain Logout
+    </div>
   )
 }
 
-export default UserLogout
+export default CaptainLogout

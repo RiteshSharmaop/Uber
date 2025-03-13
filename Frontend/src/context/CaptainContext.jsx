@@ -28,4 +28,4 @@ const CaptainContext = ({ children }) => {
     );
 };
 
-export default CaptainContext;
+export { CaptainContext};

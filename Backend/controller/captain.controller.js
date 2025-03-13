@@ -54,7 +54,7 @@ const registerCaptain = asyncHandler(async (req, res, next) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(201, "Captain registered successfully", {captain, token}));
+    .json(new ApiResponse(201, {captain, token} , "Captain registered successfully"));
 });
 
 
@@ -82,11 +82,11 @@ const loginCaptain = asyncHandler(async (req, res, next) => {
   .cookie("token", token)
   .json(
     new ApiResponse(
-      201, 
-      "Captain logged in successfully", 
+      201,  
       { 
         captain, 
-        token }
+        token },
+        "Captain logged in successfully",
       )
     );
 });
@@ -95,7 +95,7 @@ const currentCaptain = asyncHandler(async (req, res, next) => {
   const captain = req.captain;
   return res
     .status(201)
-    .json(new ApiResponse(201, "Captain found", captain));
+    .json(new ApiResponse(201,captain ,"Captain found"));
 });
 
 const logoutCaptain = asyncHandler(async (req, res, next) => {
@@ -109,7 +109,7 @@ const logoutCaptain = asyncHandler(async (req, res, next) => {
   return res
     .status(201)
     .clearCookie("token")
-    .json(new ApiResponse(201, "Captain logged out successfully", captain));
+    .json(new ApiResponse(201, captain, "Captain logged out successfully"));
 }
 );
 

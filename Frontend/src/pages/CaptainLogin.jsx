@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 
 function CaptainLogin() {
@@ -10,6 +11,7 @@ function CaptainLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState('')
     const [captainData, setCaptainData] = useState({})
+    const {captain , setCaptain} = useContext(CaptainDataContext)
     
     const navigate = useNavigate();
 
@@ -24,8 +26,8 @@ function CaptainLogin() {
 
         if(response.status === 201){
             const data = response.data.data;
-            console.log(data);
-            setCaptainData(data.captain);
+            // setCaptainData(data.captain);
+            setCaptain(data.captain);
             localStorage.setItem('token', data.token);
             navigate('/captain-home');
         }

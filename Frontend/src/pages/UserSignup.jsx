@@ -26,12 +26,13 @@ function UserSignup() {
         }
         // console.log("user Data brfore save: " , newUser);
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
-        // console.log("Response : ", response);
+        console.log("Response : ", response);
         if(response.status === 201){
             const data = response.data.data;
             // console.log("Data : ", data);
             setUser(data.user);
             localStorage.setItem('token', data.token);
+            // console.log("REgistered")
             navigate('/home');
         }
         setEmail('');

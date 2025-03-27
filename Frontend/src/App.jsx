@@ -25,9 +25,9 @@ const App = () => {
             <Route path='/captain-signup' element= {<CaptainSignup/>}/>
             <Route path='/home' 
             element= {
-              <UserProtectedWrapper>
+              // <UserProtectedWrapper>
                 <Home/>
-              </UserProtectedWrapper>
+              // </UserProtectedWrapper>
             }/>
             <Route path='/user/logout' 
             element={
